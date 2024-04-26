@@ -55,16 +55,22 @@ const formSchema = z.object({
   destination: z
     .string()
     .min(1, { message: 'Pilihan kota tujuan tidak boleh kosong.' }),
-  weight: z.string().min(1, {
-    message: 'Berat barang tidak boleh kosong.',
-  }),
+  weight: z.string().refine(
+    (val) => {
+      const num = Number(val);
+      return !isNaN(num) && num >= 1 && num <= 30_000 && String(num) === val;
+    },
+    {
+      message: 'Berat barang harus dalam rentang 1 - 30.000 g.',
+    }
+  ),
   courier: z.string().min(1, { message: 'Pilihan kurir tidak boleh kosong.' }),
 });
 
 const defaultValues = {
   origin: '',
   destination: '',
-  weight: '',
+  weight: '0',
   courier: '',
 };
 
